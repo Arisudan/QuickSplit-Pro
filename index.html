@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QuickSplit Pro — The ultimate group bill splitter. Split items unequally, distribute tax/tip proportionally, and choose your preferred currency.">
+  <meta name="theme-color" content="#6366f1">
+  <title>QuickSplit Pro — Proportional Bill Splitter</title>
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="QuickSplit Pro — Proportional Bill Splitter">
+  <meta property="og:description" content="No more awkward equal splits. Split items item-by-item, calculate tax/tip proportionally, and share breakdowns with friends instantly in any currency.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Outfit & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><rect x=%222%22 y=%225%22 width=%2213%22 height=%2214%22 rx=%222.5%22 fill=%22%236366f1%22 /><path d=%22M17 5H13V19H17C18.6569 19 20 17.6569 20 16V8C20 6.34315 18.6569 5 17 5Z%22 fill=%22%2300f2fe%22 /></svg>">
+  <!-- Tesseract.js OCR Library -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+</head>
+<body>
+  <div class="background-decorations" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="app-container">
+    <header class="app-header">
+      <div class="header-top">
+        <h1 class="logo">
+          <svg viewBox="0 0 24 24" class="logo-icon" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="5" width="13" height="14" rx="2.5" fill="var(--color-primary)" />
+            <path d="M17 5H13V19H17C18.6569 19 20 17.6569 20 16V8C20 6.34315 18.6569 5 17 5Z" fill="var(--color-secondary)" />
+            <line x1="12" y1="3" x2="12" y2="21" stroke="#000000" stroke-width="3.2" stroke-linecap="round" />
+            <line x1="12" y1="3" x2="12" y2="21" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" />
+          </svg>
+          <span class="logo-text">QuickSplit</span>
+          <span class="logo-badge">PRO</span>
+        </h1>
+
+        <div class="header-controls">
+          <button type="button" id="btn-reset-bill" class="btn-reset-bill" aria-label="Reset bill" title="Reset all bill data">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="theme-icon">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+            </svg>
+          </button>
+
+          <div class="currency-select-wrapper">
+            <label for="currency-select" class="sr-only">Currency</label>
+            <select id="currency-select" class="currency-dropdown">
+              <option value="USD" data-symbol="$">USD ($)</option>
+              <option value="EUR" data-symbol="€">EUR (€)</option>
+              <option value="GBP" data-symbol="£">GBP (£)</option>
+              <option value="INR" data-symbol="₹" selected>INR (₹)</option>
+              <option value="JPY" data-symbol="¥">JPY (¥)</option>
+              <option value="CAD" data-symbol="C$">CAD (C$)</option>
+              <option value="AUD" data-symbol="A$">AUD (A$)</option>
+              <option value="SGD" data-symbol="S$">SGD (S$)</option>
+            </select>
+          </div>
+
+          <div class="theme-switch-container">
+            <button type="button" id="theme-toggle" class="theme-switch" aria-label="Switch light or dark theme">
+              <span class="theme-switch-slider"></span>
+              <span class="theme-switch-option sun-option">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="theme-icon">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m0 13.5V21M6.75 12h-2.25m16.5 0h-2.25m-1.5-5.626-1.59 1.59m-8.62 8.62-1.59 1.59m11.82-1.59 1.59 1.59M6.75 6.75l1.59-1.59M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
+                </svg>
+              </span>
+              <span class="theme-switch-option moon-option">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="theme-icon">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.72 9.72 0 0 1 18 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 0 0 3 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 0 0 9.002-5.998Z" />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <p class="tagline">Proportional group bill splitter.</p>
+    </header>
+
+    <main class="app-content">
+      <!-- Input Panel: Managing items & friends -->
+      <div class="control-panel">
+        <!-- Section 1: Manage Friends -->
+        <section class="card friends-card">
+          <h2 class="card-title">1. Add Friends</h2>
+          <form id="add-friend-form" class="inline-form">
+            <div class="input-wrapper" style="display: flex; flex-direction: column; width: 100%;">
+              <input type="text" id="friend-name" class="input-field" placeholder="Enter friend's name" required maxlength="15">
+              <p id="friend-form-warning" class="form-warning-msg" style="display: none; margin-top: 6px; margin-bottom: 0;"></p>
+            </div>
+            <button type="submit" id="btn-add-friend" class="btn-secondary">Add</button>
+          </form>
+          <div id="friends-list" class="chips-container">
+            <!-- Dynamically populated friend chips -->
+            <p class="placeholder-text">No friends added yet. Add some to start splitting!</p>
+          </div>
+        </section>
+
+        <!-- Section 2: Add Items -->
+        <section class="card items-card">
+          <div class="items-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <h2 class="card-title" style="margin-bottom: 0;">2. Add Items</h2>
+            <button type="button" id="btn-open-scanner" class="btn-scan-scanner">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+              </svg>
+              Scan Bill
+            </button>
+          </div>
+          <form id="add-item-form">
+            <div class="form-grid">
+              <div class="input-group item-name-group">
+                <label for="item-name" class="input-label">Item Name</label>
+                <div class="input-wrapper">
+                  <input type="text" id="item-name" class="input-field" placeholder="e.g., Garlic Bread" required style="padding-right: 42px;">
+                  <button type="button" id="btn-voice-input" class="btn-voice-input" aria-label="Speech to text input" title="Input item using voice">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" style="width: 16px; height: 16px;">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+ 
+              <div class="input-group item-price-group">
+                <label for="item-price" class="input-label">Price</label>
+                <div class="input-wrapper">
+                  <span class="input-prefix" id="price-currency-symbol">₹</span>
+                  <input type="number" id="item-price" class="input-field pad-prefix" placeholder="0.00" min="0.01" step="0.01" required>
+                </div>
+              </div>
+ 
+              <div class="input-group item-qty-group">
+                <label for="item-qty" class="input-label">Qty</label>
+                <div class="qty-stepper">
+                  <button type="button" class="btn-step btn-step-minus" aria-label="Decrease quantity" tabindex="-1">&minus;</button>
+                  <input type="number" id="item-qty" class="input-field qty-input" value="1" min="1" step="1" readonly required>
+                  <button type="button" class="btn-step btn-step-plus" aria-label="Increase quantity" tabindex="-1">&plus;</button>
+                </div>
+              </div>
+            </div>
+ 
+            <p id="item-form-warning" class="form-warning-msg" style="display: none;"></p>
+            <div class="item-form-actions" style="display: flex; gap: 12px;">
+              <button type="submit" id="btn-add-item" class="btn-primary-gradient" style="flex-grow: 1;" disabled>Add Item to Bill</button>
+              <button type="button" id="btn-cancel-edit" class="btn-secondary" style="display: none; padding: 12px 16px;">Cancel</button>
+            </div>
+          </form>
+        </section>
+ 
+        <!-- Section 3: Assign Shares -->
+        <section class="card assign-shares-card">
+          <h2 class="card-title">3. Assign Shares (Click Friend to Assign Dishes)</h2>
+          <div id="unassigned-alert-container"></div>
+          <div id="friends-breakdown-container" class="breakdown-grid">
+            <!-- Dynamically populated breakdown cards for each friend -->
+            <p class="placeholder-text text-center">Assign shares will generate as friends are added.</p>
+          </div>
+        </section>
+ 
+        <!-- Section 4: Tax & Tip Rates -->
+        <section class="card settings-card">
+          <h2 class="card-title">4. Add Tax & Service Charge</h2>
+          <div class="settings-grid">
+            <!-- Tax Group -->
+            <div class="input-group">
+              <div class="label-header">
+                <span class="input-label">Tax</span>
+                <div class="toggle-group" id="tax-type-group">
+                  <button type="button" class="btn-toggle active" data-type="percent">%</button>
+                  <button type="button" class="btn-toggle" data-type="amount">Amt</button>
+                </div>
+              </div>
+              <div class="input-wrapper">
+                <span class="input-prefix" id="tax-currency-symbol" style="display:none;">₹</span>
+                <input type="number" id="tax-input" class="input-field" placeholder="5" min="0" step="any" value="5" inputmode="decimal">
+                <span class="input-suffix" id="tax-percent-suffix">%</span>
+              </div>
+              <div class="preset-pills" id="tax-presets" style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                <button type="button" class="preset-pill" data-value="5">5%</button>
+                <button type="button" class="preset-pill" data-value="12">12%</button>
+                <button type="button" class="preset-pill" data-value="18">18%</button>
+                <button type="button" class="preset-pill" data-value="28">28%</button>
+              </div>
+            </div>
+ 
+            <!-- Tip Group -->
+            <div class="input-group">
+              <div class="label-header">
+                <span class="input-label">Service Charge</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <button type="button" id="service-charge-toggle" class="switch-toggle active" title="Enable or disable Service Charge">
+                    <span class="switch-slider"></span>
+                  </button>
+                  <div class="toggle-group" id="tip-type-group">
+                    <button type="button" class="btn-toggle active" data-type="percent">%</button>
+                    <button type="button" class="btn-toggle" data-type="amount">Amt</button>
+                  </div>
+                </div>
+              </div>
+              <div class="input-wrapper">
+                <span class="input-prefix" id="tip-currency-symbol" style="display:none;">₹</span>
+                <input type="number" id="tip-input" class="input-field" placeholder="10" min="0" step="any" value="10" inputmode="decimal">
+                <span class="input-suffix" id="tip-percent-suffix">%</span>
+              </div>
+              <div class="preset-pills" id="tip-presets" style="display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;">
+                <button type="button" class="preset-pill" data-value="0">0%</button>
+                <button type="button" class="preset-pill" data-value="5">5%</button>
+                <button type="button" class="preset-pill" data-value="10">10%</button>
+                <button type="button" class="preset-pill" data-value="15">15%</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+ 
+      <!-- Result Panel: Summaries & Breakdowns -->
+      <div class="summary-panel">
+        <!-- Section 2: Added Items -->
+        <section class="card bill-ledger-card">
+          <div class="ledger-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <h2 class="card-title" style="margin-bottom: 0;">Added Items</h2>
+            <input type="text" id="ledger-search" class="input-field search-input" placeholder="Search items..." style="max-width: 180px; padding: 6px 12px; font-size: 0.85rem; height: 34px; border-radius: var(--radius-sm);">
+          </div>
+          
+          <div id="ledger-filters" class="chips-container" style="margin-bottom: 16px; display: flex; gap: 6px; flex-wrap: wrap;">
+            <!-- Dynamic filters: "All", friend names -->
+          </div>
+ 
+          <div id="items-list-container" class="scroll-list">
+            <!-- Dynamically populated items lists -->
+            <p class="placeholder-text text-center">No items added to the bill yet.</p>
+          </div>
+        </section>
+ 
+        <!-- Section 4.5: Payments & Settlement -->
+        <section class="card payments-card">
+          <div class="payments-header-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <h2 class="card-title" style="margin-bottom: 0;">Payments & Settlement</h2>
+            <button type="button" id="btn-split-unpaid" class="text-link-btn" style="font-size: 0.82rem;">Split Unpaid Balance</button>
+          </div>
+          <div class="payments-input-section">
+            <div id="payments-list-container" class="payments-grid-list">
+              <!-- Dynamically populated friends list with payment inputs -->
+              <p class="placeholder-text text-center">Add friends to log payments.</p>
+            </div>
+          </div>
+          
+          <div class="settlement-results-section" id="settlement-wrapper" style="display:none; margin-top:20px;">
+            <div class="receipt-divider" style="margin-bottom: 16px;"></div>
+            <h3 class="subsection-title">Transfer Instructions (Click for Math Details)</h3>
+            <div id="settlement-list-container" class="settlement-list">
+              <!-- Dynamically populated debt simplification transfers -->
+            </div>
+          </div>
+        </section>
+ 
+        <!-- Section 5: Group Splits -->
+        <section class="card calculations-card">
+          <h2 class="card-title">Split Summary</h2>
+ 
+          <div class="receipt-card">
+            <div class="receipt-row">
+              <span>Subtotal</span>
+              <span id="summary-subtotal">₹0.00</span>
+            </div>
+            <div class="receipt-row">
+              <span>Tax Amount</span>
+              <span id="summary-tax">₹0.00</span>
+            </div>
+            <div class="receipt-row">
+              <span>Service Charge</span>
+              <span id="summary-tip">₹0.00</span>
+            </div>
+            <div class="receipt-divider"></div>
+            <div class="receipt-row total-row">
+              <span>Grand Total</span>
+              <span id="summary-total">₹0.00</span>
+            </div>
+          </div>
+ 
+          <div class="split-actions-grid" style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 12px; margin-top: 20px;">
+            <button type="button" id="btn-share" class="btn-primary-gradient" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="btn-icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+              </svg>
+              WhatsApp Summary
+            </button>
+            <button type="button" id="btn-download-receipt" class="btn-secondary" style="display: flex; justify-content: center; align-items: center; gap: 6px; padding: 12px 10px; font-size: 0.9rem;" disabled>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" class="btn-icon" style="width: 16px; height: 16px; color: var(--color-secondary);">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              Download PNG
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>&copy; 2026 QuickSplit Pro. All Rights Reserved. Owned legally by Arisudan.</p>
+    </footer>
+  </div>
+
+  <!-- Toast Feedback Alerts -->
+  <div id="toast" class="toast-container" aria-live="polite">
+    <div class="toast-content">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="toast-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+      </svg>
+      <span id="toast-message">Summary copied to clipboard!</span>
+    </div>
+  </div>
+
+  <!-- Bill OCR Scanner Modal Dialog -->
+  <div id="scanner-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-header-title">Scan Bill Receipt</h3>
+        <button type="button" id="btn-close-scanner" class="btn-close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Scan options switcher -->
+        <div class="scanner-switch-row" style="display: flex; gap: 10px; margin-bottom: 16px;">
+          <button type="button" id="tab-scan-file" class="btn-toggle active" style="flex:1;">Upload Image</button>
+          <button type="button" id="tab-scan-camera" class="btn-toggle" style="flex:1;">Use Camera</button>
+        </div>
+
+        <!-- File Upload Section -->
+        <div id="scan-file-section" class="scan-panel">
+          <div class="file-drop-area" id="file-drop-zone">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 48px; height: 48px; color: var(--color-secondary); margin-bottom: 12px; opacity:0.75;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 0 0 4.5 4.5h10.5a4.5 4.5 0 0 0 4.5-4.5zm0-2.25h19.5M12 3v11.25m0 0 L8.25 10.5M12 14.25 L15.75 10.5" />
+            </svg>
+            <p style="font-weight:600; margin-bottom: 6px; font-size: 0.95rem;">Drag & drop your receipt image</p>
+            <p style="color:var(--text-muted); font-size: 0.8rem; margin-bottom: 12px;">Supports PNG, JPG, WebP</p>
+            <button type="button" class="btn-secondary" id="btn-choose-file">Select File</button>
+            <input type="file" id="scan-file-input" accept="image/*" style="display:none;">
+          </div>
+        </div>
+
+        <!-- Live Camera Section -->
+        <div id="scan-camera-section" class="scan-panel" style="display: none; flex-direction: column; align-items: center;">
+          <div class="camera-stream-wrapper">
+            <video id="camera-stream" autoplay playsinline></video>
+            <div class="scanner-laser"></div>
+            <div class="scanner-reticle"></div>
+            <canvas id="camera-capture-canvas" style="display: none;"></canvas>
+          </div>
+          <button type="button" id="btn-capture-snapshot" class="btn-primary-gradient" style="margin-top: 16px; padding: 12px 28px; font-size: 0.92rem;">
+            Capture Receipt
+          </button>
+        </div>
+
+        <!-- Loading spinner -->
+        <div id="scanner-loading" style="display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px;">
+          <div class="ocr-spinner" style="width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1); border-top-color: var(--color-secondary); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+          <p style="font-weight: 600; margin-top: 14px; font-size: 0.9rem; color: var(--color-secondary);">Reading receipt text...</p>
+          <p style="color: var(--text-muted); font-size: 0.76rem; margin-top: 4px;">Running Tesseract OCR engine client-side</p>
+        </div>
+
+        <!-- Scanned Items Review List -->
+        <div id="scanner-results-section" style="display: none; margin-top: 10px;">
+          <h4 style="font-family: var(--font-display); font-size: 1rem; font-weight:700; margin-bottom: 12px; color: var(--text-light);">Extracted Bill Items</h4>
+          <div id="scanned-items-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding-right: 4px; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px; background: rgba(0,0,0,0.15);">
+            <!-- List of checkboxes with [Item name] - [Price] inputs -->
+          </div>
+          <div class="results-actions-row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+            <button type="button" id="btn-re-scan" class="text-link-btn" style="font-size:0.85rem;">Scan Another</button>
+            <button type="button" id="btn-import-scanned" class="btn-primary-gradient" style="padding: 10px 20px; font-size: 0.9rem;">Import Scanned Items</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
