@@ -8,12 +8,12 @@
   --bg-card: hsla(217, 33%, 16%, 0.7);
   --bg-card-hover: hsla(217, 33%, 20%, 0.85);
   --border-color: hsla(217, 30%, 30%, 0.25);
-  --border-highlight: hsla(245, 80%, 65%, 0.35);
+  --border-highlight: hsla(220, 85%, 55%, 0.35);
 
-  --color-primary: hsl(245, 82%, 67%);
-  --color-primary-glow: hsla(245, 82%, 67%, 0.25);
-  --color-secondary: hsl(190, 95%, 48%);
-  --color-secondary-glow: hsla(190, 95%, 48%, 0.3);
+  --color-primary: hsl(220, 85%, 55%);
+  --color-primary-glow: hsla(220, 85%, 55%, 0.2);
+  --color-secondary: hsl(198, 70%, 65%);
+  --color-secondary-glow: hsla(198, 70%, 65%, 0.25);
   --color-danger: hsl(0, 84%, 60%);
   --color-danger-glow: hsla(0, 84%, 60%, 0.2);
 
@@ -39,12 +39,12 @@ body.light-theme {
   --bg-card: rgba(255, 255, 255, 0.7);
   --bg-card-hover: rgba(255, 255, 255, 0.85);
   --border-color: rgba(148, 163, 184, 0.25);
-  --border-highlight: hsla(245, 80%, 65%, 0.35);
+  --border-highlight: hsla(220, 80%, 38%, 0.35);
 
-  --color-primary: hsl(250, 70%, 45%);
-  --color-primary-glow: hsla(250, 70%, 45%, 0.12);
-  --color-secondary: hsl(200, 85%, 30%);
-  --color-secondary-glow: hsla(200, 85%, 30%, 0.12);
+  --color-primary: hsl(220, 80%, 38%);
+  --color-primary-glow: hsla(220, 80%, 38%, 0.12);
+  --color-secondary: hsl(198, 60%, 30%);
+  --color-secondary-glow: hsla(198, 60%, 30%, 0.12);
   --color-danger: hsl(0, 75%, 48%);
   --color-danger-glow: hsla(0, 75%, 48%, 0.12);
 
@@ -646,7 +646,7 @@ body.light-theme .moon-option .theme-icon {
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 6px;
-  border: 1px solid hsla(190, 95%, 48%, 0.2);
+  border: 1px solid hsla(198, 70%, 65%, 0.2);
 }
 
 .text-link-btn {
@@ -1038,7 +1038,7 @@ body.light-theme .receipt-card::after {
 
 /* Gradient Buttons */
 .btn-primary-gradient {
-  background: linear-gradient(135deg, var(--color-primary) 0%, hsl(245, 75%, 58%) 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, hsl(210, 80%, 62%) 100%);
   border: none;
   color: var(--text-main);
   border-radius: var(--radius-md);
@@ -1278,8 +1278,8 @@ body.light-theme .btn-paid-all:hover {
   gap: 8px;
   font-size: 0.88rem;
   font-weight: 600;
-  background: hsla(190, 95%, 48%, 0.05);
-  border: 1px solid rgba(190, 95, 48, 0.15);
+  background: hsla(198, 70%, 65%, 0.05);
+  border: 1px solid hsla(198, 70%, 65%, 0.15);
   padding: 8px 14px;
   border-radius: var(--radius-sm);
   color: var(--text-light);
@@ -1598,6 +1598,35 @@ body.light-theme .filter-chip.active {
   height: 18px;
 }
 
+/* --- Ledger Split Equally Button --- */
+.btn-split-equal {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.btn-split-equal:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-glow);
+}
+
+.btn-split-equal.active {
+  color: var(--color-primary);
+  background: var(--color-primary-glow);
+}
+
+.btn-split-equal svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* --- Settlement Math Expander Tooltips (#7) --- */
 .settlement-row-container {
   display: flex;
@@ -1888,13 +1917,13 @@ body.light-theme .scanner-switch-row {
 
 .scanned-item-row:hover {
   border-color: var(--color-secondary);
-  background: hsla(190, 95%, 48%, 0.03);
+  background: hsla(198, 70%, 65%, 0.03);
 }
 
 /* Highlight checked card options dynamic style */
 .scanned-item-row:has(.scanned-item-checkbox:checked) {
-  border-color: hsla(245, 82%, 67%, 0.4);
-  background: hsla(245, 82%, 67%, 0.04);
+  border-color: hsla(220, 85%, 55%, 0.4);
+  background: hsla(220, 85%, 55%, 0.04);
 }
 
 body.light-theme .scanned-item-row {
@@ -1974,7 +2003,7 @@ body.light-theme .scanned-item-row:has(.scanned-item-checkbox:checked) {
 .btn-scan-scanner:hover {
   border-color: var(--color-secondary);
   color: var(--text-main);
-  background: hsla(190, 95%, 48%, 0.08);
+  background: hsla(198, 70%, 65%, 0.08);
 }
 
 .btn-scan-scanner:hover svg {
@@ -2066,8 +2095,8 @@ body.light-theme .switch-toggle.active {
 }
 
 .breakdown-assignee-row.assigned {
-  background: hsla(245, 82%, 67%, 0.05);
-  border-color: hsla(245, 82%, 67%, 0.15);
+  background: hsla(220, 85%, 55%, 0.05);
+  border-color: hsla(220, 85%, 55%, 0.15);
 }
 
 .breakdown-assignee-row .item-name-col {
@@ -2164,8 +2193,8 @@ body.light-theme .breakdown-assignee-row {
 }
 
 body.light-theme .breakdown-assignee-row.assigned {
-  background: hsla(250, 70%, 45%, 0.04);
-  border-color: hsla(250, 70%, 45%, 0.1);
+  background: hsla(220, 80%, 38%, 0.04);
+  border-color: hsla(220, 80%, 38%, 0.1);
 }
 
 /* --- Unassigned Warning Alert Banners --- */
@@ -2209,5 +2238,135 @@ body.light-theme .unassigned-success-banner {
   background: hsla(142, 70%, 45%, 0.06);
   border-color: hsla(142, 70%, 45%, 0.2);
   color: hsl(142, 75%, 30%);
+}
+
+/* --- Session History Archive Styles --- */
+.history-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: hsla(222, 47%, 5%, 0.35);
+  border: 1px solid var(--border-color);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  gap: 12px;
+  transition: var(--transition-smooth);
+}
+
+.history-item-row:hover {
+  border-color: var(--border-highlight);
+  background: hsla(222, 47%, 5%, 0.45);
+}
+
+body.light-theme .history-item-row {
+  background: rgba(148, 163, 184, 0.05);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+body.light-theme .history-item-row:hover {
+  background: rgba(148, 163, 184, 0.1);
+  border-color: var(--color-primary);
+}
+
+.history-item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.history-item-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body.light-theme .history-item-title {
+  color: var(--text-main);
+}
+
+.history-item-subtitle {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-item-total {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-secondary);
+  font-size: 0.95rem;
+  min-width: 70px;
+  text-align: right;
+  margin-right: 8px;
+}
+
+.history-item-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.history-item-actions .btn-load,
+.history-item-actions .btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: var(--transition-smooth);
+  outline: none;
+}
+
+.history-item-actions .btn-load {
+  color: var(--color-secondary);
+}
+
+.history-item-actions .btn-load:hover {
+  background: var(--color-secondary-glow);
+}
+
+.history-item-actions .btn-delete {
+  color: var(--text-muted);
+}
+
+.history-item-actions .btn-delete:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-glow);
+}
+
+.history-item-actions svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* --- Settlement Checkbox & Checked states --- */
+.settlement-row.settled {
+  background: hsla(142, 70%, 45%, 0.04) !important;
+  border-color: hsla(142, 70%, 45%, 0.15) !important;
+  color: var(--text-muted) !important;
+  transition: var(--transition-smooth);
+}
+
+body.light-theme .settlement-row.settled {
+  background: rgba(16, 185, 129, 0.04) !important;
+  border-color: rgba(16, 185, 129, 0.15) !important;
+}
+
+.settle-debt-checkbox {
+  accent-color: var(--color-secondary);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  margin-right: 6px;
 }
 
